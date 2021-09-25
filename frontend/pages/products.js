@@ -1,6 +1,8 @@
+import ProductsScreen from '../components/Products';
+
 const Products = () => (
   <div>
-    <p>Hello</p>
+    <ProductsScreen />
   </div>
 );
 
