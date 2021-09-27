@@ -7,7 +7,6 @@ const paginationField = () => ({
 
     // Read the number of items on the apge from the cache
     const data = cache.readQuery({ query: ALL_PRODUCT_COUNT_QUERY });
-    console.log('data', data);
     const count = data?._allProductsMeta?.count;
     const page = skip / first + 1;
     const pages = Math.ceil(count / first);
@@ -39,7 +38,7 @@ const paginationField = () => ({
     // The other thing we can do is to return a flase from here {network request}
   },
   merge(existing, incoming, { args }) {
-    const { skip, first } = args;
+    const { skip } = args;
     // This runs when the Apollo Cluent comes back from the network with our product
     console.log(`Merging items from the network ${incoming.length}`);
     const merged = existing ? existing.slice(0) : [];
@@ -47,8 +46,6 @@ const paginationField = () => ({
     for (let i = skip; i < skip + incoming.length; i++) {
       merged[i] = incoming[i - skip];
     }
-
-    console.log('merged', merged);
 
     return merged;
   },
