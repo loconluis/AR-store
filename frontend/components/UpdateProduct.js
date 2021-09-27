@@ -1,51 +1,44 @@
-import { useMutation } from '@apollo/client';
+import { useEffect } from 'react';
+import { useMutation, useQuery } from '@apollo/client';
 import Router from 'next/router';
 import FormStyles from './styles/Form';
 import DisplayError from './ErrorMessage';
 import useForm from '../lib/useForm';
-import { ALL_PRODUCTS_QUERY, CREATE_PRODUCT_MUTATION } from '../queries';
+import { SINGLE_PRODUCT_QUERY, UPDATE_PRODUCT_MUTATION } from '../queries';
 
-const initialState = {
-  image: '',
-  name: '',
-  price: 0,
-  description: '',
-};
-
-const CreateProduct = () => {
-  const [inputs, handleChange, , clearForm] = useForm(initialState);
-  const [_createProduct, { loading, error }] = useMutation(
-    CREATE_PRODUCT_MUTATION,
-    {
-      variables: inputs,
-      refetchQueries: [{ query: ALL_PRODUCTS_QUERY }],
-    }
-  );
+const UpdateProduct = ({ id }) => {
+  const { data, error, loading } = useQuery(SINGLE_PRODUCT_QUERY, {
+    variables: { id },
+  });
+  const [inputs, handleChange, , clearForm] = useForm(data?.Product);
+  const [
+    updateProduct,
+    { error: _errorUpdate, loading: loadingUpdate },
+  ] = useMutation(UPDATE_PRODUCT_MUTATION);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Submit the inputs fields to the backend
-    const res = await _createProduct();
-    clearForm();
-    Router.push({
-      pathname: `/product/${res.data?.createProduct.id}`,
+    const res = await updateProduct({
+      variables: {
+        id,
+        name: inputs.name,
+        description: inputs.description,
+        price: inputs.price,
+      },
     });
+    // clearForm();
+    // Router.push({
+    //   pathname: `/product/${res.data?.updateProduct.id}`,
+    // });
   };
 
+  if (loading) {
+    return <p>Loading...</p>;
+  }
   return (
     <FormStyles onSubmit={handleSubmit}>
-      <DisplayError error={error} />
-      <fieldset disabled={loading} aria-busy={loading}>
-        <label htmlFor="image">
-          Image
-          <input
-            onChange={handleChange}
-            type="file"
-            name="image"
-            id="image"
-            required
-          />
-        </label>
+      <DisplayError error={error || _errorUpdate} />
+      <fieldset disabled={loadingUpdate} aria-busy={loadingUpdate}>
         <label htmlFor="name">
           Name
           <input
@@ -83,5 +76,4 @@ const CreateProduct = () => {
     </FormStyles>
   );
 };
-
-export default CreateProduct;
+export default UpdateProduct;

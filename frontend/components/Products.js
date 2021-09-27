@@ -1,24 +1,7 @@
 import { useQuery } from '@apollo/client';
-import gql from 'graphql-tag';
 import styled from 'styled-components';
 import Product from './Product';
-
-const ALL_PRODUCT_QUERY = gql`
-  query ALL_PRODUCTS_QUERY {
-    allProducts {
-      id
-      name
-      price
-      description
-      photo {
-        id
-        image {
-          publicUrlTransformed
-        }
-      }
-    }
-  }
-`;
+import { ALL_PRODUCTS_QUERY } from '../queries';
 
 const ProductsList = styled.div`
   display: grid;
@@ -27,7 +10,7 @@ const ProductsList = styled.div`
 `;
 
 const Products = () => {
-  const { data, error, loading } = useQuery(ALL_PRODUCT_QUERY);
+  const { data, error, loading } = useQuery(ALL_PRODUCTS_QUERY);
   if (loading) {
     return <p>Loading...</p>;
   }
