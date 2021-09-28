@@ -2,34 +2,52 @@ import { useMutation } from '@apollo/client';
 import FormStyles from './styles/Form';
 import DisplayedError from './ErrorMessage';
 import useForm from '../lib/useForm';
-import { CURRENT_USER_QUERY, SIGNIN_MUTATION } from '../queries';
+import { CURRENT_USER_QUERY, SINGUP_MUTATION } from '../queries';
 
-const SigIn = () => {
+const SignUp = () => {
   const [inputs, handleChange, resetForm] = useForm({
     email: '',
+    name: '',
     password: '',
   });
-  const [sigin, { error, loading, data }] = useMutation(SIGNIN_MUTATION, {
+  const [signup, { error, loading, data }] = useMutation(SINGUP_MUTATION, {
     variables: inputs,
-    refetchQueries: [{ query: CURRENT_USER_QUERY }],
+    // refetchQueries: [{ query: CURRENT_USER_QUERY }],
   });
 
   const handleOnSubmit = async (e) => {
-    e.preventDefault();
-    await sigin();
+    try {
+      e.preventDefault();
+      const res = await signup();
+      console.log({ res, error, loading, data });
+    } catch (_e) {
+      console.error(_e);
+    }
   };
-
-  const _error =
-    data?.authenticateUserWithPassword.__typename ===
-    'UserAuthenticationWithPasswordFailure'
-      ? data?.authenticateUserWithPassword
-      : undefined;
 
   return (
     <FormStyles method="post" onSubmit={handleOnSubmit}>
-      <h2>Sing into your account</h2>
+      <h2>Sing Up For an Account</h2>
       <DisplayedError error={error} />
       <fieldset>
+        {data?.createUser && (
+          <p>
+            Signed up with {data?.createUser.email} - Please Go Head and Sign
+            In!{' '}
+          </p>
+        )}
+        <label htmlFor="name">
+          Your Name
+          <input
+            onChange={handleChange}
+            type="text"
+            name="name"
+            id="name"
+            value={inputs.name}
+            autoComplete="name"
+            placeholder="Your Name"
+          />
+        </label>
         <label htmlFor="email">
           Email
           <input
@@ -53,10 +71,10 @@ const SigIn = () => {
             autoComplete="password"
           />
         </label>
-        <button type="submit">Sign In!</button>
+        <button type="submit">Sign Up!</button>
       </fieldset>
     </FormStyles>
   );
 };
 
-export default SigIn;
+export default SignUp;

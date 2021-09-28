@@ -125,3 +125,49 @@ export const SIGNIN_MUTATION = gql`
     }
   }
 `;
+
+export const SIGNOUT_MUTATION = gql`
+  mutation {
+    endSession
+  }
+`;
+
+export const SINGUP_MUTATION = gql`
+  mutation SIGNUP_MUTATION(
+    $email: String!
+    $name: String!
+    $password: String!
+  ) {
+    createUser(data: { email: $email, name: $name, password: $password }) {
+      id
+      email
+      name
+    }
+  }
+`;
+
+export const REQUEST_RESET_MUTATION = gql`
+  mutation REQUEST_RESET_MUTATION($email: String!) {
+    sendUserPasswordResetLink(email: $email) {
+      code
+      message
+    }
+  }
+`;
+
+export const RESET_MUTATION = gql`
+  mutation RESET_MUTATION(
+    $email: String!
+    $password: String!
+    $token: String!
+  ) {
+    redeemUserPasswordResetToken(
+      email: $email
+      password: $password
+      token: $token
+    ) {
+      code
+      message
+    }
+  }
+`;
