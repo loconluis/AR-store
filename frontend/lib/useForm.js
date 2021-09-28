@@ -33,7 +33,6 @@ const useForm = (initialState = {}) => {
 
     setInputs(blankState);
   };
-
   return [inputs, handleChange, resetForm, clearForm];
 };
 

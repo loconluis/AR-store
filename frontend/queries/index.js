@@ -94,3 +94,34 @@ export const ALL_PRODUCT_COUNT_QUERY = gql`
     }
   }
 `;
+
+export const CURRENT_USER_QUERY = gql`
+  query CURRENT_USER_QUERY {
+    authenticatedItem {
+      ... on User {
+        id
+        email
+        name
+        # TODO the cart when we have it
+      }
+    }
+  }
+`;
+
+export const SIGNIN_MUTATION = gql`
+  mutation SIGNIN_MUTATION($email: String!, $password: String!) {
+    authenticateUserWithPassword(email: $email, password: $password) {
+      ... on UserAuthenticationWithPasswordSuccess {
+        item {
+          id
+          email
+          name
+        }
+      }
+      ... on UserAuthenticationWithPasswordFailure {
+        code
+        message
+      }
+    }
+  }
+`;
