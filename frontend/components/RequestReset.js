@@ -18,8 +18,7 @@ const RequestReset = () => {
   const handleOnSubmit = async (e) => {
     try {
       e.preventDefault();
-      const res = await signup();
-      console.log({ res, error, loading, data });
+      await signup();
     } catch (_e) {
       console.error(_e);
     }

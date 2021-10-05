@@ -16,7 +16,6 @@ const ResetComponent = ({ token }) => {
   const handleOnSubmit = async (e) => {
     try {
       e.preventDefault();
-      console.log('inputs', inputs);
       const res = await reset();
       resetForm();
     } catch (_e) {

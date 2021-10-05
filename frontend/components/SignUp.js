@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client';
 import FormStyles from './styles/Form';
 import DisplayedError from './ErrorMessage';
 import useForm from '../lib/useForm';
-import { CURRENT_USER_QUERY, SINGUP_MUTATION } from '../queries';
+import { SINGUP_MUTATION } from '../queries';
 
 const SignUp = () => {
   const [inputs, handleChange, resetForm] = useForm({
@@ -12,14 +12,12 @@ const SignUp = () => {
   });
   const [signup, { error, loading, data }] = useMutation(SINGUP_MUTATION, {
     variables: inputs,
-    // refetchQueries: [{ query: CURRENT_USER_QUERY }],
   });
 
   const handleOnSubmit = async (e) => {
     try {
       e.preventDefault();
       const res = await signup();
-      console.log({ res, error, loading, data });
     } catch (_e) {
       console.error(_e);
     }
