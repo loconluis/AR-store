@@ -102,7 +102,22 @@ export const CURRENT_USER_QUERY = gql`
         id
         email
         name
-        # TODO the cart when we have it
+        cart {
+          id
+          quantity
+          product {
+            id
+            price
+            name
+            description
+            photo {
+              image {
+                publicUrlTransformed
+              }
+              altText
+            }
+          }
+        }
       }
     }
   }
@@ -168,6 +183,22 @@ export const RESET_MUTATION = gql`
     ) {
       code
       message
+    }
+  }
+`;
+
+export const ADD_TO_CART_MUTATION = gql`
+  mutation ADD_TO_CART_MUTATION($id: ID!) {
+    addToCart(productId: $id) {
+      id
+    }
+  }
+`;
+
+export const REMOVE_FROM_CART_MUTATION = gql`
+  mutation REMOVE_FROM_CART_MUTATION($id: ID!) {
+    deleteCartItem(id: $id) {
+      id
     }
   }
 `;
